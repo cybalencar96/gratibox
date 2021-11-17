@@ -1,5 +1,6 @@
 import connection from './connection.js';
 import users from './users.js';
+import subscribers from './subscribers.js';
 
 export default function makeDbFactory() {
     function endConnection() {
@@ -21,5 +22,6 @@ export default function makeDbFactory() {
         endConnection,
         clear,
         users,
+        subscribers,
     };
 }
