@@ -7,6 +7,7 @@ import { getInvalidUser, getValidUser } from '../src/utils/faker.js';
 const db = makeDbFactory();
 const invalidUser = getInvalidUser();
 const validUser = getValidUser();
+const validUser2 = getValidUser();
 
 afterAll(async () => {
     await db.clear([
@@ -24,6 +25,9 @@ describe('USERS ENTITY', () => {
             'sessions',
             'users',
         ]);
+
+        await db.users.add(validUser2);
+
     });
 
     describe('route POST /sign-up', () => {
@@ -39,6 +43,24 @@ describe('USERS ENTITY', () => {
             const result = await supertest(app)
                 .post('/sign-up')
                 .send(validUser)
+            
+            expect(result.status).toEqual(200);
+        });
+    });
+
+    describe('route POST /sign-in', () => {
+        test('should return 401 when invalid credentials', async () => {
+            const result = await supertest(app)
+                .post('/sign-in')
+                .send(invalidUser)
+
+            expect(result.status).toEqual(401);
+        });
+        
+        test('should return 200 when user registered', async () => {
+            const result = await supertest(app)
+                .post('/sign-in')
+                .send(validUser2)
             
             expect(result.status).toEqual(200);
         });
