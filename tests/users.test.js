@@ -19,6 +19,8 @@ afterAll(async () => {
 });
 
 describe('USERS ENTITY', () => {
+    let token;
+    let user;
 
     beforeEach(async () => {
         await db.clear([
@@ -26,8 +28,8 @@ describe('USERS ENTITY', () => {
             'users',
         ]);
 
-        await db.users.add(validUser2);
-
+        user = await db.users.add(validUser2);
+        token = await db.users.createSession(user.id);
     });
 
     describe('route POST /sign-up', () => {
@@ -60,6 +62,25 @@ describe('USERS ENTITY', () => {
         test('should return 200 when user registered', async () => {
             const result = await supertest(app)
                 .post('/sign-in')
+                .send(validUser2)
+            
+            expect(result.status).toEqual(200);
+        });
+    });
+
+    describe('route GET /user', () => {
+        test('should return 401 when invalid or missing token', async () => {
+            const result = await supertest(app)
+                .get('/user')
+                .send(invalidUser)
+
+            expect(result.status).toEqual(401);
+        });
+        
+        test('should return 200 when user authenticated', async () => {
+            const result = await supertest(app)
+                .get('/user')
+                .set('Authorization', `Bearer ${token}`)
                 .send(validUser2)
             
             expect(result.status).toEqual(200);
