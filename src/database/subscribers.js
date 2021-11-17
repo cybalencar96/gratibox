@@ -11,6 +11,19 @@ async function add(subscribeInfos) {
         deliverInfos,
     } = subscribeInfos;
     
+    
+
+    const subscription = await connection.query(`
+        INSERT INTO subscribers
+            (user_id, subscription_type, deliver_option, teas, incenses, organics)
+        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
+    `, [userId, subscriptionType, deliverOption, teas, incenses, organics])
+
+    // in case I'm calling from own app needing only add subscription
+    if (!deliverInfos) {
+        return subscription.rows[0];
+    }
+
     const {
         name,
         cep,
@@ -18,12 +31,6 @@ async function add(subscribeInfos) {
         city,
         uf,
     } = deliverInfos;
-
-    const subscription = await connection.query(`
-        INSERT INTO subscribers
-            (user_id, subscription_type, deliver_option, teas, incenses, organics)
-        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
-    `, [userId, subscriptionType, deliverOption, teas, incenses, organics])
 
     const deliver_infos = await connection.query(`
         INSERT INTO deliver_infos

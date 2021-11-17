@@ -8,9 +8,10 @@ async function subscribe(req, res) {
         subscriptionType,
         deliverOption,
     } = req.body
+
     try {
         const isSubscribed = await db.subscribers.get({ userId: res.locals.user.user_id })
-
+        
         if (isSubscribed) {
             return res.status(409).send('user is a subscriber')
         }
