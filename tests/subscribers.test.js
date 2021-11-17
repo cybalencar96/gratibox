@@ -38,7 +38,7 @@ describe('SUBSCRIBERS ENTITY', () => {
         userSubscribed = await db.users.add(validUser);
         tokenSubscribed = await db.users.createSession(userSubscribed.id);
 
-        const result = await db.subscribers.add({
+        const addedSubs = await db.subscribers.add({
             userId: userSubscribed.id,
             subscriptionType: 'weekly',
             deliverOption: 'monday',
@@ -46,6 +46,11 @@ describe('SUBSCRIBERS ENTITY', () => {
             incenses: true,
             organics: true,
         });
+
+        await db.deliverInfos.add({
+            ...validDeliverInfos,
+            subscriberId: addedSubs.id
+        })
 
         user2 = await db.users.add(validUser2);
         token2 = await db.users.createSession(user2.id);
@@ -75,6 +80,22 @@ describe('SUBSCRIBERS ENTITY', () => {
             expect(result.status).toEqual(400);
         });
 
+        test('should return 409 when already subscribed', async () => {
+            const result = await supertest(app)
+                .post('/subscriber')
+                .set('Authorization', `Bearer ${tokenSubscribed}`)
+                .send({
+                    subscriptionType: 'monthly',
+                    deliverOption: '10',
+                    teas: true,
+                    incenses: true,
+                    organics: true,
+                    deliverInfos: validDeliverInfos
+                });
+
+            expect(result.status).toEqual(409);
+        });
+
         test('should return 200 when user subscribed', async () => {
             const result = await supertest(app)
                 .post('/subscriber')
@@ -87,6 +108,23 @@ describe('SUBSCRIBERS ENTITY', () => {
                     organics: true,
                     deliverInfos: validDeliverInfos
                 });
+
+            expect(result.status).toEqual(200);
+        });
+    });
+
+    describe('route GET /subscriber', () => {
+        test('should return 401 when invalid or not token', async () => {
+            const result = await supertest(app)
+                .get('/subscriber')
+            
+            expect(result.status).toEqual(401);
+        });
+
+        test('should return 200 when get subscriber', async () => {
+            const result = await supertest(app)
+                .get('/subscriber')
+                .set('Authorization', `Bearer ${tokenSubscribed}`)
 
             expect(result.status).toEqual(200);
         });
