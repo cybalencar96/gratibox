@@ -1,4 +1,5 @@
 import makeDbFactory from "../database/database.js";
+import usersFactory from "../database/users.js";
 
 const db = makeDbFactory();
 
@@ -26,11 +27,32 @@ async function subscribe(req, res) {
             }
         }
 
-        const subscription = await db.subscribers.add({
+        const { subscription, deliver_infos} = await db.subscribers.add({
             ...req.body,
             userId: res.locals.user.user_id
         });
-        return res.send(subscription);
+
+        delete deliver_infos.id;
+        delete deliver_infos.subscriber_id;
+
+        return res.send({
+            ...subscription,
+            ...deliver_infos
+        });
+    } catch (error) {
+        console.error(error)
+        res.sendStatus(500);
+    }
+}
+
+async function getSubscribe(req, res) {
+    try {
+        const subscription = await db.subscribers.get({userId: res.locals.user.user_id});
+        if (!subscription) {
+            return res.status(406).send('user not subscribed')
+        }
+
+        res.send(subscription)
     } catch (error) {
         console.error(error)
         res.sendStatus(500);
@@ -39,4 +61,5 @@ async function subscribe(req, res) {
 
 export {
     subscribe,
+    getSubscribe,
 }

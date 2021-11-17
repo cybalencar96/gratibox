@@ -6,7 +6,7 @@ import {
     logOut,
     getUserAuthenticated,
 } from './controllers/users.js';
-import { subscribe } from './controllers/subscribers.js';
+import { subscribe, getSubscribe } from './controllers/subscribers.js';
 import { subscribeSchema } from './schemas/subscribers.js';
 import { auth } from './middlewares/auth.js';
 import { signUpSchema } from './schemas/users.js';
@@ -29,6 +29,7 @@ app.get('/user', auth, getUserAuthenticated);
 
 // SUBSCRIBERS
 app.post('/subscriber', auth, validateBody(subscribeSchema), subscribe)
+app.get('/subscriber', auth, getSubscribe)
 
 
 
