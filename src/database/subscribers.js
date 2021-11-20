@@ -94,7 +94,13 @@ async function add(subscribeInfos) {
   };
 }
 
-async function get({ id, userId }) {
+async function get(filters = {}) {
+  const { id, userId, only } = filters;
+
+  if (only) {
+    return (await connection.query(`SELECT * FROM subscribers;`)).rows;
+  }
+
   const params = [];
   let query = `
         SELECT

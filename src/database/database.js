@@ -3,6 +3,9 @@ import users from "./users.js";
 import subscribers from "./subscribers.js";
 import deliverInfos from "./deliverInfos.js";
 import { signUp } from "../controllers/users.js";
+import dayjs from "dayjs";
+import dayOfYear from "dayjs/plugin/dayOfYear.js";
+dayjs.extend(dayOfYear);
 
 export default function makeDbFactory() {
   function endConnection() {
@@ -32,12 +35,12 @@ export default function makeDbFactory() {
 const TIME_1_DAY = 1000 * 60 * 60 * 24;
 
 setInterval(async () => {
-  const allSubscribers = await subscribers.get();
-  const today = Date.now();
+  const allSubscribers = await subscribers.get({ only: true });
+  const today = dayjs(Date.now()).dayOfYear();
 
-  const todaysDeliverySubscribers = allSubscribers.filter(
-    (subscriber) => subscriber.next_deliver_date * 1000 === today
-  );
+  const todaysDeliverySubscribers = allSubscribers.filter((subscriber) => {
+    return dayjs(subscriber.next_deliver_date * 1000).dayOfYear() === today;
+  });
 
   await Promise.all(
     todaysDeliverySubscribers.map((subscriber) => {
@@ -59,7 +62,7 @@ setInterval(async () => {
         if (weekday === 7) nextDeliverDate += TIME_1_DAY;
       }
 
-      if (subscriptionType === "weekly") {
+      if (subscriber.subscription_type === "weekly") {
         let deliverOptionIsoWeek;
         const todayIsoWeek = dayjs(todaysDeliverDate).isoWeekday();
 
