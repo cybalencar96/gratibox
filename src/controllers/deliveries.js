@@ -47,6 +47,12 @@ async function putDeliverAvaliation(req, res) {
         .send("this delivery does not belong to this subscriber");
     }
 
+    if (req.body.avaliation === false) {
+      if (!req.body.avaliationType || !req.body.avaliationDesc) {
+        return res.status(400).send("send type and desc for bad avaliations");
+      }
+    }
+
     await db.deliveries.changeAvaliation(req.body);
 
     res.send();

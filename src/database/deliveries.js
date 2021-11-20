@@ -16,6 +16,8 @@ async function get(filters = {}) {
     query += ` AND subscriber_id = $${params.length}`;
   }
 
+  query += "ORDER BY delivered_at DESC LIMIT 3";
+
   const result = await connection.query(query, params);
   return result.rows;
 }
@@ -30,14 +32,20 @@ async function add(subscriberId) {
 async function changeAvaliation(delivery) {
   const { deliveryId, avaliation, avaliationType, avaliationDesc } = delivery;
 
-  return connection.query(
-    `
+  const params = [deliveryId, avaliation];
+  let query = `
         UPDATE deliveries
-        SET avaliation = $1, avaliation_type = $2, avaliation_desc = $3
-        WHERE id = $4;
-    `,
-    [avaliation, avaliationType, avaliationDesc, deliveryId]
-  );
+        SET avaliation = $2
+    `;
+
+  if (avaliationType && avaliationDesc) {
+    params.push(avaliationType);
+    params.push(avaliationDesc);
+    query += ", avaliation_type = $3, avaliation_desc = $4 ";
+  }
+
+  query += "WHERE id = $1";
+  return connection.query(query, params);
 }
 
 const deliveries = {
