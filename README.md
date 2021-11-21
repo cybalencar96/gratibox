@@ -53,7 +53,7 @@ You will not choose the item, but you can always choose to be grateful for what 
 1.  Clone backend repo
 
 ```sh
-https://github.com/cybalencar96/gratibox-back.git
+git clone https://github.com/cybalencar96/gratibox-back.git
 ```
 
 2. Install dependencies executing comand in root
