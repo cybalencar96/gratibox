@@ -1,11 +1,6 @@
 import express from "express";
 import cors from "cors";
-import {
-  signUp,
-  signIn,
-  logOut,
-  getUserAuthenticated,
-} from "./controllers/users.js";
+import { signUp, signIn, getUserAuthenticated } from "./controllers/users.js";
 import { subscribe, getSubscribe } from "./controllers/subscribers.js";
 import { subscribeSchema } from "./schemas/subscribers.js";
 import { auth } from "./middlewares/auth.js";
@@ -16,6 +11,7 @@ import {
   putDeliverAvaliation,
 } from "./controllers/deliveries.js";
 import { putDeliveryAvaliationSchema } from "./schemas/deliveries.js";
+import { clearDb } from "./controllers/setupDb.js";
 
 const app = express();
 
@@ -43,5 +39,8 @@ app.put(
   validateBody(putDeliveryAvaliationSchema),
   putDeliverAvaliation
 );
+
+// SETUP DB TO TESTS E2E
+app.get("/setup-test-db", clearDb);
 
 export default app;
