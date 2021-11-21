@@ -12,7 +12,7 @@ let connectionData = {
 
 if (process.env.NODE_ENV === "prod") {
   connectionData = {
-    connectionString: process.env.DATABASE_URI,
+    connectionString: process.env.DATABASE_URL,
     ssl: {
       rejectUnauthorized: false,
     },
