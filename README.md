@@ -74,6 +74,18 @@ git clone https://github.com/cybalencar96/gratibox-front.git
 npm i
 ```
 
+5. Create a .env file with following env variables ( showing example values)
+
+```sh
+DB_USER=postgres
+DB_HOST=localhost
+DB_PASS=123456
+DB_PORT=5432
+DB_NAME=gratibox
+```
+
+6. Create a postgres database and run (copy & paste) the dump.sql statements in it
+
 <br />
 
 ### **How to run**
