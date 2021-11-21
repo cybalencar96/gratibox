@@ -24,7 +24,7 @@ async function get(filters = {}) {
 
 async function add(subscriberId) {
   return connection.query(
-    `INSERT INTO deliveries (subscriber_id) VALUES $1 RETURNING *`,
+    `INSERT INTO deliveries (subscriber_id) VALUES ($1) RETURNING *`,
     [subscriberId]
   );
 }

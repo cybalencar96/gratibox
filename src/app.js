@@ -29,7 +29,6 @@ app.get("/health", (req, res) => {
 // USERS
 app.post("/sign-up", validateBody(signUpSchema), signUp);
 app.post("/sign-in", signIn);
-app.post("/log-out", auth, logOut);
 app.get("/user", auth, getUserAuthenticated);
 
 // SUBSCRIBERS

@@ -5,7 +5,7 @@ import makeDbFactory from "../database/database.js";
 const db = makeDbFactory();
 
 async function signUp(req, res) {
-  const { name, email, password } = req.body;
+  const { email } = req.body;
 
   try {
     const user = await db.users.get("byEmail", email);
@@ -61,15 +61,4 @@ async function getUserAuthenticated(req, res) {
   });
 }
 
-async function logOut(req, res) {
-  const { token } = res.locals;
-  try {
-    await db.users.removeSessions("byToken", token);
-    return res.sendStatus(200);
-  } catch (error) {
-    console.log(error);
-    return res.sendStatus(500);
-  }
-}
-
-export { signUp, signIn, getUserAuthenticated, logOut };
+export { signUp, signIn, getUserAuthenticated };

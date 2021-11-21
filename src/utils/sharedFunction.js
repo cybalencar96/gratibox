@@ -38,4 +38,8 @@ export default function generatePassword(numLc, numUc, numDigits, numSpecial) {
   return shuffle(pass).join("");
 }
 
-export { generatePassword };
+function randomIntFromInterval(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export { generatePassword, randomIntFromInterval };
