@@ -11,7 +11,7 @@
     <br />
     <a href="https://github.com/cybalencar96/gratibox-back"><strong>Explore the docs »</strong></a>
     <br />
-    <a href="/">View Demo</a>
+    <a href="https://gratibox-front-git-main-cybalencar96.vercel.app/">View Demo</a>
     <br />
   </p>
 </p>
