@@ -3,7 +3,6 @@ import fakerbr from "faker/locale/pt_BR";
 import { generatePassword } from "./sharedFunction.js";
 
 function randomIntFromInterval(min, max) {
-  // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
