@@ -74,7 +74,7 @@ git clone https://github.com/cybalencar96/gratibox-front.git
 npm i
 ```
 
-1. Create a .env.development file in frontend root folder with following variable and value
+5. Create a .env.development file in frontend root folder with following variable and value
 
 ```sh
 REACT_APP_SERVER_URL=http://localhost:4000
